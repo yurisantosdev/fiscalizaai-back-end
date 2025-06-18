@@ -1,0 +1,190 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Estados {
+  escodigo   String       @id
+  essigla    String?      @unique
+  esestado   String?      @unique
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @default(now())
+  Municipios Municipios[]
+  Enderecos  Enderecos[]
+
+  @@map("estados")
+}
+
+model Municipios {
+  mccodigo    String   @id
+  mcmunicipio String
+  mcestado    String
+  mclatitude  Float?
+  mclongitude Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  //Relaçoes
+  estado            Estados             @relation(fields: [mcestado], references: [escodigo])
+  Enderecos         Enderecos[]
+  ContatosMunicipio ContatosMunicipio[]
+
+  @@map("municipios")
+}
+
+model Enderecos {
+  edcodigo          String   @id
+  edrua             String
+  edestado          String
+  edmunicipio       String
+  ednumero          String
+  edcomplemento     String?
+  edpontoreferencia String?
+  edcep             String
+  edbairro          String
+  edlatitude        String?
+  edlongitude       String?
+  edproblema        Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now())
+
+  //Relações
+  municipio Municipios  @relation(fields: [edmunicipio], references: [mccodigo])
+  estado    Estados     @relation(fields: [edestado], references: [escodigo])
+  Usuarios  Usuarios[]
+  Problemas Problemas[]
+
+  @@map("enderecos")
+}
+
+model Usuarios {
+  uscodigo   String   @id
+  usnome     String
+  usemail    String   @unique
+  ussenha    String
+  usendereco String
+  usmaster   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  //Relações
+  endereco                 Enderecos                  @relation(fields: [usendereco], references: [edcodigo])
+  Problemas                Problemas[]
+  Notificacoes             Notificacoes[]
+  CodigosRecuperacaoSenhas CodigosRecuperacaoSenhas[]
+
+  @@map("usuarios")
+}
+
+model CategoriasProblemas {
+  cacodigo    String      @id
+  cacategoria String      @unique
+  cadescricao String
+  caativa     Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @default(now())
+  Problemas   Problemas[]
+
+  @@map("categoriasProblemas")
+}
+
+enum StatusProblemasEnum {
+  EM_ANALISE
+  RESOLVIDO
+  PENDENTE
+  EM_ANDAMENTO
+  CORRIGIR
+}
+
+model Problemas {
+  decodigo      String              @id
+  decategoria   String
+  dedescricao   String
+  deusuario     String?
+  delocalizacao String
+  dedata        DateTime?
+  destatus      StatusProblemasEnum
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @default(now())
+
+  //Relações
+  categoria                   CategoriasProblemas           @relation(fields: [decategoria], references: [cacodigo])
+  usuario                     Usuarios?                     @relation(fields: [deusuario], references: [uscodigo])
+  localizacao                 Enderecos                     @relation(fields: [delocalizacao], references: [edcodigo], onDelete: Cascade)
+  FotosProblemas              FotosProblemas[]
+  HistoricoCorrecoesProblemas HistoricoCorrecoesProblemas[]
+
+  @@map("problemas")
+}
+
+model ContatosMunicipio {
+  cmcodigo    String   @id
+  cmcontato   String   @unique
+  cmdescricao String
+  cmmunicipio String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  //Relações
+  municipio Municipios @relation(fields: [cmmunicipio], references: [mccodigo])
+
+  @@map("contatosMunicipio")
+}
+
+model FotosProblemas {
+  fdcodigo   String   @id
+  fdfoto     String
+  fdproblema String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  //Relações
+  problema Problemas @relation(fields: [fdproblema], references: [decodigo])
+
+  @@map("fotosProblemas")
+}
+
+model Notificacoes {
+  ntcodigo      String   @id
+  ntlida        Boolean  @default(false)
+  ntusuario     String
+  ntnotificacao String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
+
+  //Relações
+  usuario Usuarios @relation(fields: [ntusuario], references: [uscodigo])
+
+  @@map("notificacoes")
+}
+
+model CodigosRecuperacaoSenhas {
+  crscodigo            String   @id
+  crsusuario           String
+  crscodigorecuperacao Int
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @default(now())
+
+  //Relações
+  usuario Usuarios @relation(fields: [crsusuario], references: [uscodigo])
+
+  @@map("codigosRecuperacaoSenhas")
+}
+
+model HistoricoCorrecoesProblemas {
+  hcpcodigo   String   @id
+  hcpproblema String
+  hcpmotivo   String
+  hcpquando   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  //Relações
+  problema Problemas @relation(fields: [hcpproblema], references: [decodigo])
+
+  @@map("historicoCorrecoesProblemas")
+}
