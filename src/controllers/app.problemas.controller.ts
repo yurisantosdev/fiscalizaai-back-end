@@ -53,7 +53,7 @@ export class ProblemasController {
     return this.service.findProblemasAnalise();
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Post('problemas/geral')
   async findProblemasGeral() {
     return this.service.findProblemasGeral();
