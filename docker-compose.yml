@@ -7,7 +7,7 @@ services:
     ports:
       - '3028:3028'
     environment:
-      - DATABASE_URL=postgres://beermonth_user:nMbltGKxd6ELp238JCyPrvlO2eqxepMu@dpg-co64gh8l5elc73abeemg-a.oregon-postgres.render.com/beermonth
+      - DATABASE_URL=postgresql://fiscaliza_ai_db_user:OGf4S53XPtI38LcwVHcPjOZIBCtwN1HE@dpg-d14773buibrs73e0ip6g-a.oregon-postgres.render.com/fiscaliza_ai_db
     command: sh -c "npm install && npx prisma migrate dev && npx prisma generate && npm run start"
 volumes:
   db_data:
