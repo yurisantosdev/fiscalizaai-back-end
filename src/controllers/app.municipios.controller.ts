@@ -24,7 +24,7 @@ export class MunicipiosController {
     return this.service.create(Body);
   }
 
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Get('municipios/sincronizar/IBGE')
   async sincronizarMunicipiosIBGE() {
     return this.service.sincronizarMunicipiosIBGE();

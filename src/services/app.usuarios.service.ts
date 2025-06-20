@@ -59,7 +59,7 @@ export class UsuarioService {
           <p>Use este código para redefinir sua senha.</p>
           <p>Se você não solicitou a recuperação de senha, por favor ignore este email.</p>
 
-          <a href="http://localhost:3000/redefinirSenha">http://localhost:3000/redefinirSenha</a>
+          <a href="https://fiscalizaai-front-end.vercel.app/redefinirSenha">https://fiscalizaai-front-end.vercel.app/redefinirSenha</a>
           <br>
           <p>Atenciosamente,</p>
           <p>Equipe FiscalizaAI</p>
