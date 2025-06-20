@@ -7,4 +7,4 @@ services:
     ports:
       - '8000:8000'
     environment:
-      - DATABASE_URL=postgresql://fiscaliza_ai_db_user:OGf4S53XPtI38LcwVHcPjOZIBCtwN1HE@dpg-d14773buibrs73e0ip6g-a.oregon-postgres.render.com/fiscaliza_ai_db
+      - DATABASE_URL=postgresql://fiscalizaai_user:ONWzd9CNt6G0XEEM1aDny3tjoPmAmX9A@dpg-d1amef3ipnbc73aa0r9g-a.oregon-postgres.render.com/fiscalizaai
