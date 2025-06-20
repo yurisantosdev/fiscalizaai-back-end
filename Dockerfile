@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:20
 
 WORKDIR /app
 
@@ -10,8 +10,6 @@ COPY prisma ./prisma
 
 RUN npx prisma generate
 
-RUN npx prisma migrate
-
 COPY . .
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:prod"]
