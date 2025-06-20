@@ -8,8 +8,3 @@ services:
       - '8000:8000'
     environment:
       - DATABASE_URL=postgresql://fiscaliza_ai_db_user:OGf4S53XPtI38LcwVHcPjOZIBCtwN1HE@dpg-d14773buibrs73e0ip6g-a.oregon-postgres.render.com/fiscaliza_ai_db
-      - NODE_OPTIONS=--max-old-space-size=128
-    deploy:
-      resources:
-        limits:
-          memory: 512M
