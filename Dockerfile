@@ -10,9 +10,7 @@ RUN npx prisma generate
 
 COPY . .
 
-RUN npm run build
-RUN npm prune --production
+# RUN npm run build
+# RUN npm prune --production
 
-ENV NODE_OPTIONS="--max-old-space-size=128"
-
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start"]
