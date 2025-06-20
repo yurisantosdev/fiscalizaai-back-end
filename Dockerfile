@@ -1,24 +1,25 @@
 FROM node:20
 
-# Define o diretório de trabalho
 WORKDIR /app
 
-# Copia os arquivos de dependências primeiro
+# Instalar tudo (incluindo devDependencies) só durante o build
 COPY package*.json ./
-RUN npm install --omit=dev
+RUN npm install
 
-# Copia os arquivos do Prisma
+# Prisma
 COPY prisma ./prisma
 RUN npx prisma generate
 
-# Copia o restante do projeto
+# Copiar o restante
 COPY . .
 
-# Faz o build da aplicação NestJS
+# Fazer o build (precisa do Nest CLI)
 RUN npm run build
 
-# Limita o uso de memória do Node para 128MB
+# Agora, remover as devDependencies para reduzir o tamanho da imagem
+RUN npm prune --production
+
+# Limitar memória
 ENV NODE_OPTIONS="--max-old-space-size=128"
 
-# Comando de start em modo produção
 CMD ["npm", "run", "start:prod"]
