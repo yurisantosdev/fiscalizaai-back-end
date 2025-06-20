@@ -5,8 +5,8 @@ WORKDIR /app
 # Copie apenas os arquivos necessários para instalar dependências
 COPY package*.json ./
 
-# Instale apenas dependências de produção
-RUN npm ci --omit=dev
+# Instale todas as dependências
+RUN npm ci
 
 # Copie os arquivos do Prisma e gere o client
 COPY prisma ./prisma
