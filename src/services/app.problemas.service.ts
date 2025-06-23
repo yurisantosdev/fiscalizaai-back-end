@@ -291,6 +291,7 @@ export class ProblemasServices {
                 createdAt: 'desc'
               },
             },
+            createdAt: true,
           },
           orderBy: {
             dedata: 'desc'
