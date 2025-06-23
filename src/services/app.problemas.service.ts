@@ -74,6 +74,7 @@ export class ProblemasServices {
           const objNotificacaoNovoRelatoAnalisar: NotificacoesType = {
             ntusuario: usuario.uscodigo,
             ntnotificacao: 'Nova demanda cadastrada!',
+            ntlink: 'https://fiscalizaai-front-end.vercel.app/analisarRelatos'
           };
 
           this.notificacoesService.create(objNotificacaoNovoRelatoAnalisar);
@@ -527,6 +528,7 @@ export class ProblemasServices {
         const objNotificacao: NotificacoesType = {
           ntusuario: usuarioProblema.deusuario,
           ntnotificacao: 'Há novidades no seu relato!',
+          ntlink: 'https://fiscalizaai-front-end.vercel.app/meusRelatos'
         };
         this.notificacoesService.create(objNotificacao);
       });
@@ -696,6 +698,7 @@ export class ProblemasServices {
         const objNotificacao: NotificacoesType = {
           ntusuario: relato.deusuario,
           ntnotificacao: `Há atualizações referente ao seu relato sobre, ${relato.categoria.cacategoria}`,
+          ntlink: 'https://fiscalizaai-front-end.vercel.app/meusRelatos'
         };
 
         this.notificacoesService.create(objNotificacao);

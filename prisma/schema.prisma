@@ -153,6 +153,7 @@ model Notificacoes {
   ntlida        Boolean  @default(false)
   ntusuario     String
   ntnotificacao String
+  ntlink        String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now())
 

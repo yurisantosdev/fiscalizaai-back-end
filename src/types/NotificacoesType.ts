@@ -3,6 +3,7 @@ export type NotificacoesType = {
   ntlida?: boolean;
   ntusuario: string;
   ntnotificacao: string;
+  ntlink?: string;
   createdAt?: string;
   updatedAt?: string;
 };

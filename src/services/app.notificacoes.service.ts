@@ -19,6 +19,7 @@ export class NotificacoesService {
             ntcodigo: randomUUID(),
             ntnotificacao: notificacao.ntnotificacao,
             ntusuario: notificacao.ntusuario,
+            ntlink: notificacao.ntlink
           },
         });
       });
