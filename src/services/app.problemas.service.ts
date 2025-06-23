@@ -127,7 +127,7 @@ export class ProblemasServices {
               },
               {
                 destatus: {
-                  notIn: ['EM_ANALISE', 'RESOLVIDO']
+                  notIn: ['EM_ANALISE']
                 }
               }
             ]
