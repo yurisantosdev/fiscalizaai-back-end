@@ -403,6 +403,110 @@ export class ProblemasServices {
     }
   }
 
+  async findProblemasRevisar(body: ConsultaProblemasLocalizacaoUsuarioType) {
+    try {
+      let problemas;
+
+      console.log(body)
+
+      await this.prisma.$transaction(async (prisma) => {
+        problemas = await prisma.problemas.findMany({
+          where: {
+            destatus: 'CORRIGIR',
+            deusuario: body.uscodigo,
+          },
+          select: {
+            decodigo: true,
+            decategoria: true,
+            dedescricao: true,
+            delocalizacao: true,
+            dedata: true,
+            destatus: true,
+            deusuario: true,
+            localizacao: {
+              select: {
+                edcodigo: true,
+                edrua: true,
+                edestado: true,
+                edmunicipio: true,
+                ednumero: true,
+                edcomplemento: true,
+                edcep: true,
+                edbairro: true,
+                edlatitude: true,
+                edlongitude: true,
+                municipio: {
+                  select: {
+                    mccodigo: true,
+                    mcmunicipio: true,
+                    mcestado: true,
+                    mclatitude: true,
+                    mclongitude: true,
+                  }
+                },
+                estado: {
+                  select: {
+                    escodigo: true,
+                    esestado: true,
+                    essigla: true,
+                  },
+                },
+              }
+            },
+            categoria: {
+              select: {
+                cacodigo: true,
+                cacategoria: true,
+                cadescricao: true,
+              },
+            },
+            usuario: {
+              select: {
+                uscodigo: true,
+                usnome: true,
+                usemail: true,
+              }
+            },
+            FotosProblemas: {
+              select: {
+                fdcodigo: true,
+                fdfoto: true,
+              }
+            },
+            HistoricoCorrecoesProblemas: {
+              select: {
+                hcpcodigo: true,
+                hcpmotivo: true,
+                hcpproblema: true,
+                hcpquando: true,
+              },
+              orderBy: {
+                createdAt: 'desc'
+              },
+            },
+          },
+          orderBy: {
+            dedata: 'desc'
+          }
+        });
+      });
+
+      return {
+        status: true,
+        message: 'Problemas consultados com sucesso!',
+        problemas
+      };
+    } catch (error) {
+      console.log(error)
+      const errorMessage =
+        error instanceof HttpException
+          ? error.getResponse()
+          : 'Não foi possível realizar a consulta dos problemas, por favor tente novamente!';
+
+      throw new HttpException({ status: false, error: errorMessage }, HttpStatus.FORBIDDEN);
+    }
+  }
+
   async findProblemasGeral() {
     try {
       let problemas;

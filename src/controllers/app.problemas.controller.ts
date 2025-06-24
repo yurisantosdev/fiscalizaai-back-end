@@ -54,6 +54,14 @@ export class ProblemasController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Post('problemas/revisar')
+  async findProblemasRevisar(
+    @Body() Body: ConsultaProblemasLocalizacaoUsuarioType,
+  ) {
+    return this.service.findProblemasRevisar(Body);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Post('problemas/geral')
   async findProblemasGeral() {
     return this.service.findProblemasGeral();
