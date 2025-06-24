@@ -613,6 +613,11 @@ export class ProblemasServices {
           },
           select: {
             deusuario: true,
+            categoria: {
+              select: {
+                cacategoria: true,
+              },
+            },
           },
         });
 
@@ -637,7 +642,7 @@ export class ProblemasServices {
 
         const objNotificacao: NotificacoesType = {
           ntusuario: usuarioProblema.deusuario,
-          ntnotificacao: 'Há novidades no seu relato!',
+          ntnotificacao: `Há novidades no seu relato! ${usuarioProblema.categoria.cacategoria}`,
           ntlink: 'https://fiscalizaai-front-end.vercel.app/meusRelatos'
         };
         this.notificacoesService.create(objNotificacao);
