@@ -530,6 +530,7 @@ export class ProblemasServices {
             dedata: true,
             destatus: true,
             deusuario: true,
+            createdAt: true,
             localizacao: {
               select: {
                 edcodigo: true,
