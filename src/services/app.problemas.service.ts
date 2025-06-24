@@ -343,6 +343,7 @@ export class ProblemasServices {
                 edbairro: true,
                 edlatitude: true,
                 edlongitude: true,
+                edpontoreferencia: true,
                 municipio: {
                   select: {
                     mccodigo: true,
@@ -380,7 +381,8 @@ export class ProblemasServices {
                 fdcodigo: true,
                 fdfoto: true,
               }
-            }
+            },
+            createdAt: true,
           },
           orderBy: {
             dedata: 'desc'
@@ -435,6 +437,7 @@ export class ProblemasServices {
                 edbairro: true,
                 edlatitude: true,
                 edlongitude: true,
+                edpontoreferencia: true,
                 municipio: {
                   select: {
                     mccodigo: true,
@@ -484,6 +487,7 @@ export class ProblemasServices {
                 createdAt: 'desc'
               },
             },
+            createdAt: true,
           },
           orderBy: {
             dedata: 'desc'
@@ -538,6 +542,7 @@ export class ProblemasServices {
                 edbairro: true,
                 edlatitude: true,
                 edlongitude: true,
+                edpontoreferencia: true,
                 municipio: {
                   select: {
                     mccodigo: true,
