@@ -83,7 +83,6 @@ export class ProblemasServices {
 
       return { status: true, message: 'Problema cadastrado com sucesso!' };
     } catch (error) {
-      console.log(error)
       const errorMessage =
         error instanceof HttpException
           ? error.getResponse()
@@ -409,8 +408,6 @@ export class ProblemasServices {
     try {
       let problemas;
 
-      console.log(body)
-
       await this.prisma.$transaction(async (prisma) => {
         problemas = await prisma.problemas.findMany({
           where: {
@@ -501,7 +498,6 @@ export class ProblemasServices {
         problemas
       };
     } catch (error) {
-      console.log(error)
       const errorMessage =
         error instanceof HttpException
           ? error.getResponse()
@@ -1062,7 +1058,6 @@ export class ProblemasServices {
         problemas
       };
     } catch (error) {
-      console.log(error)
       const errorMessage =
         error instanceof HttpException
           ? error.getResponse()

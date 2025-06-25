@@ -12,15 +12,15 @@ export class FotosProblemasService {
 
   async create(foto: FotosProblemasType) {
     try {
-      await this.prisma.$transaction(async (prisma) => {
+      console.log('Foto Selecionada:' + foto.fdfoto)
+      console.log('Foto problema:' + foto.fdproblema)
 
-        await prisma.fotosProblemas.create({
-          data: {
-            fdcodigo: randomUUID(),
-            fdfoto: foto.fdfoto,
-            fdproblema: foto.fdproblema,
-          },
-        });
+      await this.prisma.fotosProblemas.create({
+        data: {
+          fdcodigo: randomUUID(),
+          fdfoto: foto.fdfoto,
+          fdproblema: foto.fdproblema,
+        },
       });
 
       return { status: true, message: 'Foto cadastrada com sucesso!' };
