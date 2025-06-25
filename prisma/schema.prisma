@@ -76,6 +76,7 @@ model Usuarios {
   Problemas                Problemas[]
   Notificacoes             Notificacoes[]
   CodigosRecuperacaoSenhas CodigosRecuperacaoSenhas[]
+  HistoricoRelatos         HistoricoRelatos[]
 
   @@map("usuarios")
 }
@@ -117,6 +118,7 @@ model Problemas {
   localizacao                 Enderecos                     @relation(fields: [delocalizacao], references: [edcodigo], onDelete: Cascade)
   FotosProblemas              FotosProblemas[]
   HistoricoCorrecoesProblemas HistoricoCorrecoesProblemas[]
+  HistoricoRelatos            HistoricoRelatos[]
 
   @@map("problemas")
 }
@@ -188,4 +190,19 @@ model HistoricoCorrecoesProblemas {
   problema Problemas @relation(fields: [hcpproblema], references: [decodigo])
 
   @@map("historicoCorrecoesProblemas")
+}
+
+model HistoricoRelatos {
+  hrcodigo    String   @id
+  hrrelato    String
+  hrtratativa String
+  hrusuario   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  //Relações
+  usuario Usuarios  @relation(fields: [hrusuario], references: [uscodigo])
+  relato  Problemas @relation(fields: [hrrelato], references: [decodigo])
+
+  @@map("historicoRelatos")
 }

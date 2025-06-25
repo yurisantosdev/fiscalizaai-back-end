@@ -3,29 +3,30 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { randomUUID } from 'crypto';
-import { FotosProblemasType } from 'src/types/FontosProblemasType';
+import { HistoricoRelatosType } from 'src/types/HistoricoRelatosType';
 
 @Injectable()
-export class FotosProblemasService {
+export class HistoricoRelatosService {
   // eslint-disable-next-line prettier/prettier
   constructor(readonly prisma: PrismaService) { }
 
-  async create(foto: FotosProblemasType) {
+  async create(historico: HistoricoRelatosType) {
     try {
-      await this.prisma.fotosProblemas.create({
+      await this.prisma.historicoRelatos.create({
         data: {
-          fdcodigo: randomUUID(),
-          fdfoto: foto.fdfoto,
-          fdproblema: foto.fdproblema,
+          hrcodigo: randomUUID(),
+          hrtratativa: historico.hrtratativa,
+          hrrelato: historico.hrrelato,
+          hrusuario: historico.hrusuario,
         },
       });
 
-      return { status: true, message: 'Foto cadastrada com sucesso!' };
+      return { status: true, message: 'Histórico cadastrado com sucesso!' };
     } catch (error) {
       const errorMessage =
         error instanceof HttpException
           ? error.getResponse()
-          : 'Não foi possível criar a foto, por favor tente novamente!';
+          : 'Não foi possível criar o histórico, por favor tente novamente!';
 
       throw new HttpException({ status: false, error: errorMessage }, HttpStatus.FORBIDDEN);
     }

@@ -12,6 +12,9 @@ import { NotificacoesService } from './app.notificacoes.service';
 import { NotificacoesType } from 'src/types/NotificacoesType';
 import { HistoricoCorrecoesProblemasService } from './app.historicoCorrecoesProblemas.service';
 import { HistoricoCorrecoesProblemasType } from 'src/types/HistoricoCorrecoesProblemasType';
+import { HistoricoRelatosService } from './app.historicoRelatos.service';
+import { HistoricoRelatosType } from 'src/types/HistoricoRelatosType';
+import { exibirDataHoraAtual } from 'src/utils/obterDataHoraAtual';
 
 @Injectable()
 export class ProblemasServices {
@@ -20,13 +23,14 @@ export class ProblemasServices {
     private enderecoService: EnderecosService,
     private fotosProblemasService: FotosProblemasService,
     private notificacoesService: NotificacoesService,
-    private historicoService: HistoricoCorrecoesProblemasService) { }
+    private historicoCorrecoesService: HistoricoCorrecoesProblemasService,
+    private historicoRelatosService: HistoricoRelatosService,
+  ) { }
 
   async create(problema: ProblemasType, endereco: EnderecosType, fotos: Array<string>) {
     try {
       await this.prisma.$transaction(async (prisma) => {
         const enderecoCreate = await this.enderecoService.create(endereco);
-
         const [dia, mes, anoHora] = problema.dedata.split('/');
         const [ano, hora] = anoHora.split(' ');
         const dataFormatada = new Date(`${ano}-${mes}-${dia}T${hora}`);
@@ -40,6 +44,15 @@ export class ProblemasServices {
             delocalizacao: enderecoCreate.edcodigo,
             destatus: 'EM_ANALISE',
             deusuario: problema.deusuario,
+          },
+          select: {
+            deusuario: true,
+            decodigo: true,
+            categoria: {
+              select: {
+                cacategoria: true,
+              },
+            },
           },
         });
 
@@ -183,7 +196,13 @@ export class ProblemasServices {
                 usnome: true,
                 usemail: true,
               }
-            }
+            },
+            HistoricoRelatos: {
+              select: {
+                hrcodigo: true,
+                hrtratativa: true,
+              }
+            },
           },
           orderBy: {
             dedata: 'desc'
@@ -291,6 +310,12 @@ export class ProblemasServices {
               },
             },
             createdAt: true,
+            HistoricoRelatos: {
+              select: {
+                hrcodigo: true,
+                hrtratativa: true,
+              }
+            },
           },
           orderBy: {
             dedata: 'desc'
@@ -382,6 +407,12 @@ export class ProblemasServices {
               }
             },
             createdAt: true,
+            HistoricoRelatos: {
+              select: {
+                hrcodigo: true,
+                hrtratativa: true,
+              }
+            },
           },
           orderBy: {
             dedata: 'desc'
@@ -485,6 +516,12 @@ export class ProblemasServices {
               },
             },
             createdAt: true,
+            HistoricoRelatos: {
+              select: {
+                hrcodigo: true,
+                hrtratativa: true,
+              }
+            },
           },
           orderBy: {
             dedata: 'desc'
@@ -577,7 +614,13 @@ export class ProblemasServices {
                 fdcodigo: true,
                 fdfoto: true,
               }
-            }
+            },
+            HistoricoRelatos: {
+              select: {
+                hrcodigo: true,
+                hrtratativa: true,
+              }
+            },
           },
           orderBy: {
             destatus: 'desc'
@@ -600,9 +643,18 @@ export class ProblemasServices {
     }
   }
 
-  async aprovarReprovarProblema(body: AprovarReprovarProblemaType) {
+  async aprovarReprovarProblema(body: AprovarReprovarProblemaType, usuario: string) {
     try {
       await this.prisma.$transaction(async (prisma) => {
+        const usuarioAcao = await prisma.usuarios.findFirst({
+          where: {
+            usemail: usuario,
+          },
+          select: {
+            uscodigo: true,
+            usnome: true,
+          },
+        });
         const statusProblema = body.status ? 'PENDENTE' : 'CORRIGIR';
         const usuarioProblema = await prisma.problemas.findFirst({
           where: {
@@ -635,8 +687,16 @@ export class ProblemasServices {
             hcpquando: body.quando
           };
 
-          await this.historicoService.create(bodyHistorico);
+          await this.historicoCorrecoesService.create(bodyHistorico);
         }
+
+        const bodyHistoricoRelatos: HistoricoRelatosType = {
+          hrrelato: body.decodigo,
+          hrtratativa: `Usuário: ${usuarioAcao.usnome} alterou o status do relato sobre: ${usuarioProblema.categoria.cacategoria} para o status: ${statusProblema}. No dia ${exibirDataHoraAtual()}`,
+          hrusuario: usuarioAcao.uscodigo
+        };
+
+        await this.historicoRelatosService.create(bodyHistoricoRelatos);
 
         const objNotificacao: NotificacoesType = {
           ntusuario: usuarioProblema.deusuario,
@@ -701,13 +761,20 @@ export class ProblemasServices {
           edestado: estado.escodigo
         });
 
-        await prisma.problemas.update({
+        const problemaUpdate = await prisma.problemas.update({
           where: {
             decodigo: data.decodigo,
           },
           data: {
             dedescricao: data.dedescricao,
             destatus: 'EM_ANALISE'
+          },
+          select: {
+            categoria: {
+              select: {
+                cacategoria: true,
+              },
+            },
           },
         });
 
@@ -846,6 +913,20 @@ export class ProblemasServices {
           },
         });
 
+        const problemaDeletado = await prisma.problemas.findFirst({
+          where: {
+            decodigo: body.decodigo,
+          },
+          select: {
+            decodigo: true,
+            categoria: {
+              select: {
+                cacategoria: true,
+              },
+            },
+          },
+        });
+
         await prisma.problemas.deleteMany({
           where: {
             decodigo: body.decodigo,
@@ -864,9 +945,18 @@ export class ProblemasServices {
     }
   }
 
-  async atualizarStatusRelato(body: AtualizarStatusRelatoType) {
+  async atualizarStatusRelato(body: AtualizarStatusRelatoType, usuario: string) {
     try {
       await this.prisma.$transaction(async (prisma) => {
+        const usuarioAcao = await prisma.usuarios.findFirst({
+          where: {
+            usemail: usuario,
+          },
+          select: {
+            uscodigo: true,
+            usnome: true,
+          },
+        });
         const relato = await prisma.problemas.findFirst({
           where: {
             decodigo: body.decodigo,
@@ -899,6 +989,14 @@ export class ProblemasServices {
         };
 
         this.notificacoesService.create(objNotificacao);
+
+        const bodyHistoricoRelatos: HistoricoRelatosType = {
+          hrrelato: body.decodigo,
+          hrtratativa: `Usuário: ${usuarioAcao.usnome} alterou o status do relato sobre: ${relato.categoria.cacategoria} para o status: ${body.destatus}. No dia ${exibirDataHoraAtual()}`,
+          hrusuario: usuarioAcao.uscodigo
+        };
+
+        await this.historicoRelatosService.create(bodyHistoricoRelatos);
       });
 
       return { status: true, message: 'Relato atualizado com sucesso!' };

@@ -28,7 +28,7 @@ export class ProblemasController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('problemas/create')
-  async create(@Request() @Body() Body: ProblemasCriateType) {
+  async create(@Request() req, @Request() @Body() Body: ProblemasCriateType) {
     return this.service.create(Body.problemas, Body.endereco, Body.fotos);
   }
 
@@ -71,9 +71,11 @@ export class ProblemasController {
   @UseGuards(AuthGuard('jwt'))
   @Post('problemas/analisar')
   async aprovarReprovarProblema(
+    @Request() req,
     @Request() @Body() Body: AprovarReprovarProblemaType,
   ) {
-    return this.service.aprovarReprovarProblema(Body);
+    const usuario = req.user;
+    return this.service.aprovarReprovarProblema(Body, usuario.user);
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -91,9 +93,11 @@ export class ProblemasController {
   @UseGuards(AuthGuard('jwt'))
   @Post('problemas/atualizar/status')
   async atualizarStatusRelato(
+    @Request() req,
     @Request() @Body() Body: AtualizarStatusRelatoType,
   ) {
-    return this.service.atualizarStatusRelato(Body);
+    const usuario = req.user;
+    return this.service.atualizarStatusRelato(Body, usuario.user);
   }
 
   @UseGuards(AuthGuard('jwt'))
