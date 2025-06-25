@@ -3,7 +3,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { randomUUID } from 'crypto';
-import { AprovarReprovarProblemaType, CancelarProblemaType, ConsultaProblemasLocalizacaoUsuarioType, ProblemasType, AtualizarStatusRelatoType } from 'src/types/ProblemasType';
+import { AprovarReprovarProblemaType, CancelarProblemaType, ConsultaProblemasLocalizacaoUsuarioType, ProblemasType, AtualizarStatusRelatoType, FindProblemaType } from 'src/types/ProblemasType';
 import { EnderecosType } from 'src/types/EnderecosType';
 import { EnderecosService } from './app.enderecos.service';
 import { FotosProblemasService } from './app.fotosProblemas.service';
@@ -614,6 +614,7 @@ export class ProblemasServices {
           },
           select: {
             deusuario: true,
+            decodigo: true,
             categoria: {
               select: {
                 cacategoria: true,
@@ -644,7 +645,7 @@ export class ProblemasServices {
         const objNotificacao: NotificacoesType = {
           ntusuario: usuarioProblema.deusuario,
           ntnotificacao: `Há novidades no seu relato! ${usuarioProblema.categoria.cacategoria}`,
-          ntlink: 'https://fiscalizaai-front-end.vercel.app/meusRelatos'
+          ntlink: `https://fiscalizaai-front-end.vercel.app/relato/${usuarioProblema.decodigo}`
         };
         this.notificacoesService.create(objNotificacao);
       });
@@ -734,12 +735,96 @@ export class ProblemasServices {
         const objNotificacao: NotificacoesType = {
           ntusuario: data.deusuario,
           ntnotificacao: 'Seu relato foi atualizado e está em análise!',
+          ntlink: `https://fiscalizaai-front-end.vercel.app/relato/${data.decodigo}`
         };
 
         await this.notificacoesService.create(objNotificacao);
       });
 
       return { status: true, message: 'Relato atualizado com sucesso!' };
+    } catch (error) {
+      const errorMessage =
+        error instanceof HttpException
+          ? error.getResponse()
+          : 'Não foi possível atualizar o relato, por favor tente novamente!';
+
+      throw new HttpException({ status: false, error: errorMessage }, HttpStatus.FORBIDDEN);
+    }
+  }
+
+  async findProblema(body: FindProblemaType) {
+    try {
+      let problema;
+      await this.prisma.$transaction(async (prisma) => {
+        problema = await prisma.problemas.findFirst({
+          where: {
+            decodigo: body.decodigo,
+          },
+          select: {
+            decodigo: true,
+            decategoria: true,
+            dedescricao: true,
+            delocalizacao: true,
+            dedata: true,
+            destatus: true,
+            deusuario: true,
+            localizacao: {
+              select: {
+                edcodigo: true,
+                edrua: true,
+                edestado: true,
+                edmunicipio: true,
+                ednumero: true,
+                edcomplemento: true,
+                edcep: true,
+                edbairro: true,
+                edlatitude: true,
+                edlongitude: true,
+                edpontoreferencia: true,
+                municipio: {
+                  select: {
+                    mccodigo: true,
+                    mcmunicipio: true,
+                    mcestado: true,
+                    mclatitude: true,
+                    mclongitude: true,
+                  }
+                },
+                estado: {
+                  select: {
+                    escodigo: true,
+                    esestado: true,
+                    essigla: true,
+                  },
+                },
+              }
+            },
+            categoria: {
+              select: {
+                cacodigo: true,
+                cacategoria: true,
+                cadescricao: true,
+              },
+            },
+            usuario: {
+              select: {
+                uscodigo: true,
+                usnome: true,
+                usemail: true,
+              }
+            },
+            FotosProblemas: {
+              select: {
+                fdcodigo: true,
+                fdfoto: true,
+              }
+            },
+            createdAt: true,
+          },
+        });
+      });
+
+      return { status: true, message: 'Relato consultado com sucesso!', problema };
     } catch (error) {
       const errorMessage =
         error instanceof HttpException
@@ -814,7 +899,7 @@ export class ProblemasServices {
         const objNotificacao: NotificacoesType = {
           ntusuario: relato.deusuario,
           ntnotificacao: `Há atualizações referente ao seu relato sobre, ${relato.categoria.cacategoria}`,
-          ntlink: 'https://fiscalizaai-front-end.vercel.app/meusRelatos'
+          ntlink: `https://fiscalizaai-front-end.vercel.app/relato/${relato.decodigo}`
         };
 
         this.notificacoesService.create(objNotificacao);

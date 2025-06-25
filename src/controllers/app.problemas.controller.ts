@@ -16,6 +16,7 @@ import {
   AtualizarStatusRelatoType,
   CancelarProblemaType,
   ConsultaProblemasLocalizacaoUsuarioType,
+  FindProblemaType,
   ProblemasCriateType,
   ProblemasType,
 } from 'src/types/ProblemasType';
@@ -108,5 +109,11 @@ export class ProblemasController {
       body.dataInicial,
       body.dataFinal,
     );
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('problemas/find')
+  async findProblema(@Request() @Body() Body: FindProblemaType) {
+    return this.service.findProblema(Body);
   }
 }

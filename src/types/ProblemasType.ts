@@ -17,6 +17,10 @@ export type CancelarProblemaType = {
   decodigo: string;
 };
 
+export type FindProblemaType = {
+  decodigo: string;
+};
+
 export type AtualizarStatusRelatoType = {
   decodigo: string;
   destatus: StatusProblemasEnumType;
