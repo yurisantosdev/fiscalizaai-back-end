@@ -16,8 +16,8 @@ async function bootstrap() {
 
   app.enableCors(corsOptions);
 
-  app.use(bodyParser.json({ limit: '10mb' }));
-  app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+  app.use(bodyParser.json({ limit: '600mb' }));
+  app.use(bodyParser.urlencoded({ limit: '600mb', extended: true }));
 
   await app.listen(8000);
 }

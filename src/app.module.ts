@@ -37,7 +37,6 @@ import { HistoricoRelatosService } from './services/app.historicoRelatos.service
   imports: [
     JwtModule.register({
       secret: process.env.SECRET,
-      signOptions: { expiresIn: '24h' },
     }),
   ],
   controllers: [
