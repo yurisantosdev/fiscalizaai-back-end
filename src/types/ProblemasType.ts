@@ -26,7 +26,7 @@ export type AtualizarStatusRelatoType = {
   destatus: StatusProblemasEnumType;
 };
 
-export type ExportarExcelType = {
+export type ExportarRelatorioType = {
   dados: any;
 };
 

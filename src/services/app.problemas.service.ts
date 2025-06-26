@@ -3,7 +3,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { randomUUID } from 'crypto';
-import { AprovarReprovarProblemaType, CancelarProblemaType, ConsultaProblemasLocalizacaoUsuarioType, ProblemasType, AtualizarStatusRelatoType, FindProblemaType, ExportarExcelType } from 'src/types/ProblemasType';
+import { AprovarReprovarProblemaType, CancelarProblemaType, ConsultaProblemasLocalizacaoUsuarioType, ProblemasType, AtualizarStatusRelatoType, FindProblemaType, ExportarRelatorioType } from 'src/types/ProblemasType';
 import { EnderecosType } from 'src/types/EnderecosType';
 import { EnderecosService } from './app.enderecos.service';
 import { FotosProblemasService } from './app.fotosProblemas.service';
@@ -1176,7 +1176,7 @@ export class ProblemasServices {
   }
 
   async exportarExcel(
-    body: ExportarExcelType,
+    body: ExportarRelatorioType,
     res: Response,
   ) {
     const workbook = new ExcelJS.Workbook();

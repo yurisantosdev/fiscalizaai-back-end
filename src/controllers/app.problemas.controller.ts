@@ -17,7 +17,7 @@ import {
   AtualizarStatusRelatoType,
   CancelarProblemaType,
   ConsultaProblemasLocalizacaoUsuarioType,
-  ExportarExcelType,
+  ExportarRelatorioType,
   FindProblemaType,
   ProblemasCriateType,
   ProblemasType,
@@ -125,7 +125,10 @@ export class ProblemasController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('problemas/excel')
-  async exportarExcel(@Body() Body: ExportarExcelType, @Res() res: Response) {
+  async exportarExcel(
+    @Body() Body: ExportarRelatorioType,
+    @Res() res: Response,
+  ) {
     await this.service.exportarExcel(Body, res);
   }
 }
