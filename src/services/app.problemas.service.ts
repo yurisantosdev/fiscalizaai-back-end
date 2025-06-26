@@ -3,7 +3,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { randomUUID } from 'crypto';
-import { AprovarReprovarProblemaType, CancelarProblemaType, ConsultaProblemasLocalizacaoUsuarioType, ProblemasType, AtualizarStatusRelatoType, FindProblemaType } from 'src/types/ProblemasType';
+import { AprovarReprovarProblemaType, CancelarProblemaType, ConsultaProblemasLocalizacaoUsuarioType, ProblemasType, AtualizarStatusRelatoType, FindProblemaType, ExportarExcelType } from 'src/types/ProblemasType';
 import { EnderecosType } from 'src/types/EnderecosType';
 import { EnderecosService } from './app.enderecos.service';
 import { FotosProblemasService } from './app.fotosProblemas.service';
@@ -15,6 +15,9 @@ import { HistoricoCorrecoesProblemasType } from 'src/types/HistoricoCorrecoesPro
 import { HistoricoRelatosService } from './app.historicoRelatos.service';
 import { HistoricoRelatosType } from 'src/types/HistoricoRelatosType';
 import { exibirDataHoraAtual } from 'src/utils/obterDataHoraAtual';
+import { Response } from 'express';
+import * as ExcelJS from 'exceljs';
+import { FormatarDataBrasileira } from 'src/utils/Formatters';
 
 @Injectable()
 export class ProblemasServices {
@@ -1077,6 +1080,7 @@ export class ProblemasServices {
             dedata: true,
             destatus: true,
             deusuario: true,
+            createdAt: true,
             localizacao: {
               select: {
                 edcodigo: true,
@@ -1169,5 +1173,56 @@ export class ProblemasServices {
 
       throw new HttpException({ status: false, error: errorMessage }, HttpStatus.FORBIDDEN);
     }
+  }
+
+  async exportarExcel(
+    body: ExportarExcelType,
+    res: Response,
+  ) {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Relatório');
+    const dadosFormatados = body.dados.map((item) => ({
+      categoria: item.categoria?.cacategoria || '',
+      descricao: item.dedescricao || '',
+      data: FormatarDataBrasileira(item.createdAt) || '',
+      status: item.destatus || '',
+      cep: item.localizacao?.edcep || '',
+      rua: item.localizacao?.edrua || '',
+      cidade: item.localizacao?.municipio?.mcmunicipio || '',
+      estado: item.localizacao?.estado?.essigla || '',
+      latitude: item.localizacao?.edlatitude || '',
+      longitude: item.localizacao?.edlongitude || '',
+    }));
+
+    worksheet.columns = [
+      { header: 'Categoria', key: 'categoria', width: 20 },
+      { header: 'Descrição', key: 'descricao', width: 30 },
+      { header: 'Data', key: 'data', width: 20 },
+      { header: 'Status', key: 'status', width: 20 },
+      { header: 'CEP', key: 'cep', width: 15 },
+      { header: 'Rua', key: 'rua', width: 30 },
+      { header: 'Cidade', key: 'cidade', width: 20 },
+      { header: 'Estado', key: 'estado', width: 10 },
+      { header: 'Latitude', key: 'latitude', width: 15 },
+      { header: 'Longitude', key: 'longitude', width: 15 },
+    ];
+
+    dadosFormatados.forEach((item) => {
+      worksheet.addRow(item);
+    });
+
+    worksheet.getRow(1).font = { bold: true };
+
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=relatorio-${Date.now()}.xlsx`,
+    );
+
+    await workbook.xlsx.write(res);
+    res.end();
   }
 }

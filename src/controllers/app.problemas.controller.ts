@@ -5,6 +5,7 @@ import {
   Controller,
   Get,
   Param,
+  Res,
   Post,
   Request,
   UseGuards,
@@ -16,11 +17,12 @@ import {
   AtualizarStatusRelatoType,
   CancelarProblemaType,
   ConsultaProblemasLocalizacaoUsuarioType,
+  ExportarExcelType,
   FindProblemaType,
   ProblemasCriateType,
   ProblemasType,
 } from 'src/types/ProblemasType';
-
+import { Response } from 'express';
 @Controller()
 export class ProblemasController {
   // eslint-disable-next-line prettier/prettier
@@ -119,5 +121,11 @@ export class ProblemasController {
   @Post('problemas/find')
   async findProblema(@Request() @Body() Body: FindProblemaType) {
     return this.service.findProblema(Body);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('problemas/excel')
+  async exportarExcel(@Body() Body: ExportarExcelType, @Res() res: Response) {
+    await this.service.exportarExcel(Body, res);
   }
 }

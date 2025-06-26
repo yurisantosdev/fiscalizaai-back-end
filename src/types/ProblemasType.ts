@@ -26,6 +26,10 @@ export type AtualizarStatusRelatoType = {
   destatus: StatusProblemasEnumType;
 };
 
+export type ExportarExcelType = {
+  dados: any;
+};
+
 export type StatusProblemasEnumType =
   | 'EM_ANALISE'
   | 'RESOLVIDO'
