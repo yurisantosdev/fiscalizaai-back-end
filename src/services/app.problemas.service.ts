@@ -1138,6 +1138,12 @@ export class ProblemasServices {
                 createdAt: 'desc'
               },
             },
+            HistoricoRelatos: {
+              select: {
+                hrcodigo: true,
+                hrtratativa: true,
+              }
+            },
           },
           orderBy: {
             dedata: 'desc'
