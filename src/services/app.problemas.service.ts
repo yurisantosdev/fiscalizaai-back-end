@@ -885,6 +885,12 @@ export class ProblemasServices {
                 fdfoto: true,
               }
             },
+            HistoricoRelatos: {
+              select: {
+                hrcodigo: true,
+                hrtratativa: true,
+              }
+            },
             createdAt: true,
           },
         });
