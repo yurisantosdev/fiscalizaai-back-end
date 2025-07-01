@@ -736,42 +736,10 @@ export class ProblemasServices {
           },
         });
 
-        const municipio = await prisma.municipios.findFirst({
-          where: {
-            mcmunicipio: data.localizacao.edmunicipio
-          },
-          select: {
-            mccodigo: true
-          }
-        });
-
-        if (!municipio) {
-          throw new HttpException(
-            { status: false, error: 'Município não encontrado!' },
-            HttpStatus.FORBIDDEN
-          );
-        }
-
-        const estado = await prisma.estados.findFirst({
-          where: {
-            esestado: data.localizacao.edestado
-          },
-          select: {
-            escodigo: true
-          }
-        });
-
-        if (!estado) {
-          throw new HttpException(
-            { status: false, error: 'Estado não encontrado!' },
-            HttpStatus.FORBIDDEN
-          );
-        }
-
         await this.enderecoService.update({
           ...data.localizacao,
-          edmunicipio: municipio.mccodigo,
-          edestado: estado.escodigo
+          edmunicipio: data.localizacao.edmunicipio,
+          edestado: data.localizacao.edestado
         });
 
         const problemaUpdate = await prisma.problemas.update({
@@ -940,17 +908,9 @@ export class ProblemasServices {
           },
         });
 
-        const problemaDeletado = await prisma.problemas.findFirst({
+        await prisma.historicoRelatos.deleteMany({
           where: {
-            decodigo: body.decodigo,
-          },
-          select: {
-            decodigo: true,
-            categoria: {
-              select: {
-                cacategoria: true,
-              },
-            },
+            hrrelato: body.decodigo,
           },
         });
 
