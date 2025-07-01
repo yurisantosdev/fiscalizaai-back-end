@@ -15,6 +15,7 @@ import {
   CriarUsuario,
   EsqueciSenhaType,
   RedefinirSenhaType,
+  TrocaSenhaType,
   UsuarioType,
 } from 'src/types/UsuariosType';
 
@@ -49,5 +50,10 @@ export class UsuariosController {
   @Post('usuarios/solicitar/redefinir/senha')
   async redefinirSenha(@Body() Body: RedefinirSenhaType) {
     return this.usuarioService.redefinirSenha(Body);
+  }
+
+  @Post('usuarios/trocar/senha')
+  async trocaeSenha(@Body() Body: TrocaSenhaType) {
+    return this.usuarioService.trocaSenha(Body);
   }
 }

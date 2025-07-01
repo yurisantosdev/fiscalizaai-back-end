@@ -3,7 +3,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { randomUUID } from 'crypto';
-import { EsqueciSenhaType, RecuperacaoSenhaType, RedefinirSenhaType, UsuarioType } from 'src/types/UsuariosType';
+import { EsqueciSenhaType, RecuperacaoSenhaType, RedefinirSenhaType, TrocaSenhaType, UsuarioType } from 'src/types/UsuariosType';
 import * as bcrypt from 'bcrypt';
 import { EnderecosType } from 'src/types/EnderecosType';
 import { EnderecosService } from './app.enderecos.service';
@@ -238,6 +238,51 @@ export class UsuarioService {
           ussenha: passwordCrypt
         }
       });
+    } catch (error) {
+      const errorMessage =
+        error instanceof HttpException
+          ? error.getResponse()
+          : 'Não foi possível trocar a senha, por favor tente novamente!';
+
+      throw new HttpException({ status: false, error: errorMessage }, HttpStatus.FORBIDDEN);
+    }
+  }
+
+  async trocaSenha(body: TrocaSenhaType) {
+    try {
+      const usuario = await this.prisma.usuarios.findFirst({
+        where: {
+          uscodigo: body.uscodigo
+        }
+      });
+
+      if (!usuario) {
+        throw new HttpException(
+          { status: false, error: 'Usuário não encontrado' },
+          HttpStatus.NOT_FOUND
+        );
+      }
+
+      const senhaCorreta = await bcrypt.compare(body.senhaAntiga, usuario.ussenha);
+      if (!senhaCorreta) {
+        throw new HttpException(
+          { status: false, error: 'Senha antiga divergente!' },
+          HttpStatus.BAD_REQUEST
+        );
+      }
+
+      const passwordCrypt = await bcrypt.hash(body.novaSenha, saltOrRounds);
+
+      await this.prisma.usuarios.update({
+        where: {
+          uscodigo: usuario.uscodigo
+        },
+        data: {
+          ussenha: passwordCrypt
+        }
+      });
+
+      return { status: true, message: 'Senha alterada com sucesso!' };
     } catch (error) {
       const errorMessage =
         error instanceof HttpException
