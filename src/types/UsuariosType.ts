@@ -45,3 +45,7 @@ export type TrocaSenhaType = {
   confirmarSenha: string;
   uscodigo: string;
 };
+
+export type TrocarEnderecoUsuarioType = EnderecosType & {
+  uscodigo: string;
+};

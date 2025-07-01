@@ -15,6 +15,7 @@ import {
   CriarUsuario,
   EsqueciSenhaType,
   RedefinirSenhaType,
+  TrocarEnderecoUsuarioType,
   TrocaSenhaType,
   UsuarioType,
 } from 'src/types/UsuariosType';
@@ -55,5 +56,10 @@ export class UsuariosController {
   @Post('usuarios/trocar/senha')
   async trocaeSenha(@Body() Body: TrocaSenhaType) {
     return this.usuarioService.trocaSenha(Body);
+  }
+
+  @Post('usuarios/atualizar/endereco')
+  async atualizarEndereco(@Body() Body: TrocarEnderecoUsuarioType) {
+    return this.usuarioService.atualizarEndereco(Body);
   }
 }

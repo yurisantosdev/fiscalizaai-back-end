@@ -10,7 +10,7 @@ export type EnderecosType = {
   edbairro: string;
   edlatitude?: string;
   edlongitude?: string;
-  edproblema: boolean;
-  createdAt: string;
-  updatedAt: string;
+  edproblema?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 };

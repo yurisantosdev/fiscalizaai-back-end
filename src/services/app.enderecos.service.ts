@@ -73,26 +73,52 @@ export class EnderecosService {
 
   async update(endereco: EnderecosType) {
     try {
-      await this.prisma.enderecos.update({
-        where: {
-          edcodigo: endereco.edcodigo,
-        },
-        data: {
-          edrua: endereco.edrua,
-          edestado: endereco.edestado,
-          edmunicipio: endereco.edmunicipio,
-          ednumero: endereco.ednumero,
-          edcomplemento: endereco.edcomplemento,
-          edcep: endereco.edcep,
-          edbairro: endereco.edbairro,
-          edlatitude: endereco.edlatitude,
-          edlongitude: endereco.edlongitude,
-          edpontoreferencia: endereco.edpontoreferencia
-        },
+      await this.prisma.$transaction(async (prisma) => {
+        const municipio = await prisma.municipios.findFirst({
+          where: {
+            mcmunicipio: endereco.edmunicipio,
+          },
+          select: {
+            mccodigo: true,
+          }
+        });
+
+        const estado = await prisma.estados.findFirst({
+          where: {
+            OR: [
+              { esestado: endereco.edestado },
+              { essigla: endereco.edestado }
+            ]
+          },
+          select: {
+            escodigo: true,
+          }
+        });
+
+        await this.prisma.enderecos.update({
+          where: {
+            edcodigo: endereco.edcodigo,
+          },
+          data: {
+            edrua: endereco.edrua,
+            edestado: estado.escodigo,
+            edmunicipio: municipio.mccodigo,
+            ednumero: endereco.ednumero,
+            edcomplemento: endereco.edcomplemento,
+            edcep: endereco.edcep,
+            edbairro: endereco.edbairro,
+            edlatitude: endereco.edlatitude,
+            edlongitude: endereco.edlongitude,
+            edpontoreferencia: endereco.edpontoreferencia
+          },
+        });
       });
+
+
 
       return { status: true, message: 'Endereço atualizado com sucesso!' };
     } catch (error) {
+      console.log(error)
       const errorMessage =
         error instanceof HttpException
           ? error.getResponse()

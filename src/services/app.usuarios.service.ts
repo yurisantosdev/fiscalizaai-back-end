@@ -3,7 +3,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { randomUUID } from 'crypto';
-import { EsqueciSenhaType, RecuperacaoSenhaType, RedefinirSenhaType, TrocaSenhaType, UsuarioType } from 'src/types/UsuariosType';
+import { EsqueciSenhaType, RecuperacaoSenhaType, RedefinirSenhaType, TrocarEnderecoUsuarioType, TrocaSenhaType, UsuarioType } from 'src/types/UsuariosType';
 import * as bcrypt from 'bcrypt';
 import { EnderecosType } from 'src/types/EnderecosType';
 import { EnderecosService } from './app.enderecos.service';
@@ -80,7 +80,6 @@ export class UsuarioService {
     try {
       await this.prisma.$transaction(async (prisma) => {
         const passwordCrypt = await bcrypt.hash(usuario.ussenha, saltOrRounds);
-
         const enderecoCreate = await this.enderecoService.create(endereco);
 
         await prisma.usuarios.create({
@@ -288,6 +287,21 @@ export class UsuarioService {
         error instanceof HttpException
           ? error.getResponse()
           : 'Não foi possível trocar a senha, por favor tente novamente!';
+
+      throw new HttpException({ status: false, error: errorMessage }, HttpStatus.FORBIDDEN);
+    }
+  }
+
+  async atualizarEndereco(body: TrocarEnderecoUsuarioType) {
+    try {
+      await this.enderecoService.update(body);
+
+      return { status: true, message: 'Endereço atualizado com sucesso!' };
+    } catch (error) {
+      const errorMessage =
+        error instanceof HttpException
+          ? error.getResponse()
+          : 'Não foi possível atualizar seu endereço, por favor tente novamente!';
 
       throw new HttpException({ status: false, error: errorMessage }, HttpStatus.FORBIDDEN);
     }
