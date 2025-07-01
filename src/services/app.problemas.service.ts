@@ -695,7 +695,7 @@ export class ProblemasServices {
 
         const bodyHistoricoRelatos: HistoricoRelatosType = {
           hrrelato: body.decodigo,
-          hrtratativa: `Usuário: ${usuarioAcao.usnome} alterou o status do relato sobre: ${usuarioProblema.categoria.cacategoria} para o status: ${statusProblema}. No dia ${exibirDataHoraAtual()}`,
+          hrtratativa: `O status do relato sobre: ${usuarioProblema.categoria.cacategoria} foi alterado para: ${statusProblema} no dia ${exibirDataHoraAtual()}.`,
           hrusuario: usuarioAcao.uscodigo
         };
 
@@ -723,9 +723,19 @@ export class ProblemasServices {
     }
   }
 
-  async update(data: ProblemasType) {
+  async update(data: ProblemasType, usuario: string) {
     try {
       await this.prisma.$transaction(async (prisma) => {
+        const usuarioAcao = await prisma.usuarios.findFirst({
+          where: {
+            usemail: usuario,
+          },
+          select: {
+            uscodigo: true,
+            usnome: true,
+          },
+        });
+
         const municipio = await prisma.municipios.findFirst({
           where: {
             mcmunicipio: data.localizacao.edmunicipio
@@ -805,6 +815,14 @@ export class ProblemasServices {
         };
 
         await this.notificacoesService.create(objNotificacao);
+
+        const bodyHistoricoRelatos: HistoricoRelatosType = {
+          hrrelato: data.decodigo,
+          hrtratativa: `O relato sobre: ${problemaUpdate.categoria.cacategoria} foi atualizado no dia ${exibirDataHoraAtual()}.`,
+          hrusuario: usuarioAcao.uscodigo
+        };
+
+        await this.historicoRelatosService.create(bodyHistoricoRelatos);
       });
 
       return { status: true, message: 'Relato atualizado com sucesso!' };
@@ -1001,7 +1019,7 @@ export class ProblemasServices {
 
         const bodyHistoricoRelatos: HistoricoRelatosType = {
           hrrelato: body.decodigo,
-          hrtratativa: `Usuário: ${usuarioAcao.usnome} alterou o status do relato sobre: ${relato.categoria.cacategoria} para o status: ${body.destatus}. No dia ${exibirDataHoraAtual()}`,
+          hrtratativa: `O status do relato sobre: ${relato.categoria.cacategoria} foi alterado para: ${body.destatus} no dia ${exibirDataHoraAtual()}.`,
           hrusuario: usuarioAcao.uscodigo
         };
 

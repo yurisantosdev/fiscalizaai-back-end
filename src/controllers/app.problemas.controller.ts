@@ -82,8 +82,9 @@ export class ProblemasController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('problemas/ajustar')
-  async updateProblema(@Request() @Body() Body: ProblemasType) {
-    return this.service.update(Body);
+  async updateProblema(@Request() req, @Request() @Body() Body: ProblemasType) {
+    const usuario = req.user;
+    return this.service.update(Body, usuario.user);
   }
 
   @UseGuards(AuthGuard('jwt'))
