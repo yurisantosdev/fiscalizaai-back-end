@@ -1,9 +1,7 @@
-import { FormatarData } from './Formatters';
+import { DateTime } from 'luxon';
 
 export function exibirDataHoraAtual() {
-  const agora = new Date();
-  const dataFormatada = agora.toLocaleDateString('pt-BR');
-  const horaFormatada = agora.toLocaleTimeString('pt-BR');
-
-  return FormatarData(`${dataFormatada} ${horaFormatada}`);
+  const agora = DateTime.now().setZone('America/Sao_Paulo');
+  const dataFormatada = agora.toFormat('dd/MM/yyyy HH:mm:ss');
+  return dataFormatada;
 }
