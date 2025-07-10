@@ -14,7 +14,22 @@ export class KauaneService {
     try {
       const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-      const pedeRelatos = /relatos|problemas|mais afetados|localiza(c|ç)ão|localizacoes|localizações|principais|frequentes|comuns|resumo|lista/i.test(mensagem);
+      const pedeRelatos = new RegExp(
+        [
+          'relat[óo]rios?', 'problemas?', 'reclama[cç][ãa]o(?:es)?', 'den[uú]ncias?',
+          'principais', 'frequentes', 'mais afetados?', 'locais? cr[ií]ticos?',
+          'resumo', 'lista', 'mapa de problemas', 'diagn[oó]stico',
+          'buracos?', 'asfalto', 'pavimenta[cç][ãa]o', 'cal[cç]adas?', 'obras?',
+          'lixo', 'coleta', 'entulho', 'sujeira',
+          'enchentes?', 'alagamentos?', 'esgoto', '[áa]rvore(?:s)? ca[ií]das?',
+          'ilumina[cç][ãa]o', 'luz queimada', 'poste', 'seguran[çc]a', 'vandalismo',
+          'transporte p[úu]blico', '[oó]nibus', 'ponto de [oó]nibus', 'trânsito',
+          'faixa de pedestre', 'sinaliza[cç][ãa]o',
+          'escolas?', 'postos? de sa[úu]de', 'creches?', 'hospitais?', 'm[eé]dicos?',
+          'bairros? afetados?', 'locais? com mais problemas?', 'an[áa]lise da cidade'
+        ].join('|'),
+        'i'
+      ).test(mensagem);
 
       let promptFinal = mensagem;
 
@@ -32,6 +47,13 @@ export class KauaneService {
           })
           .join('\n');
         promptFinal = `Com base nos relatos a seguir, responda à pergunta do usuário de forma clara e objetiva:\n\n${contexto}\n\nPergunta: ${mensagem}`;
+      }
+
+      if (!pedeRelatos) {
+        return {
+          status: false,
+          message: 'Desculpe, não tenho dados suficientes para responder a essa pergunta. Por favor, tente perguntar sobre problemas, relatos ou situações urbanas específicas.'
+        };
       }
 
       let inputFinal = '';
