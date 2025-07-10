@@ -11,18 +11,12 @@ export class KauaneService {
 
   async chat(mensagem: string) {
     try {
-      console.log('Antes carregar o OpenAI');
-
       const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-      console.log('Antes de chamar o GPT');
 
       const response = await client.responses.create({
         model: "gpt-4.1",
         input: mensagem
       });
-
-      console.log(response.output_text);
 
       return { status: true, message: response.output_text };
     } catch (error) {
