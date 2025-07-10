@@ -16,17 +16,25 @@ export class KauaneService {
 
       const pedeRelatos = new RegExp(
         [
+          // CATEGORIAS
+          'categorias?', 'classifica[cç][ãa]o(?:es)?', 'tipos? de problemas?', 'setores?',
+          'temas?', 'assuntos?', 'departamentos?', 'áreas da gest[ãa]o',
+
+          // STATUS
+          'status', 'situa[cç][ãa]o(?:es)?', 'resolvido(?:s)?', 'n[aã]o resolvido(?:s)?',
+          'pendentes?', 'em andamento', 'finalizados?', 'sem resposta', 'aguardando solu[cç][ãa]o',
+
+          // RELATOS GERAIS
           'relat[óo]rios?', 'problemas?', 'reclama[cç][ãa]o(?:es)?', 'den[uú]ncias?',
           'principais', 'frequentes', 'mais afetados?', 'locais? cr[ií]ticos?',
           'resumo', 'lista', 'mapa de problemas', 'diagn[oó]stico',
+
+          // TEMAS URBANOS
           'buracos?', 'asfalto', 'pavimenta[cç][ãa]o', 'cal[cç]adas?', 'obras?',
-          'lixo', 'coleta', 'entulho', 'sujeira',
-          'enchentes?', 'alagamentos?', 'esgoto', '[áa]rvore(?:s)? ca[ií]das?',
-          'ilumina[cç][ãa]o', 'luz queimada', 'poste', 'seguran[çc]a', 'vandalismo',
-          'transporte p[úu]blico', '[oó]nibus', 'ponto de [oó]nibus', 'trânsito',
-          'faixa de pedestre', 'sinaliza[cç][ãa]o',
-          'escolas?', 'postos? de sa[úu]de', 'creches?', 'hospitais?', 'm[eé]dicos?',
-          'bairros? afetados?', 'locais? com mais problemas?', 'an[áa]lise da cidade'
+          'lixo', 'coleta', 'entulho', 'sujeira', 'esgoto', 'alagamentos?',
+          'ilumina[cç][ãa]o', 'poste', 'luz queimada',
+          'transporte', 'ônibus', 'ponto de [oó]nibus', 'trânsito', 'faixa de pedestre',
+          'escolas?', 'postos? de sa[úu]de', 'creches?', 'm[eé]dicos?', 'vagas?'
         ].join('|'),
         'i'
       ).test(mensagem);
