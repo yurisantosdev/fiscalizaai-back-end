@@ -19,7 +19,15 @@ export class KauaneController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('kauane/chat')
-  async chat(@Body() body: { mensagem: string }) {
-    return this.service.chat(body.mensagem);
+  async chat(
+    @Request() req,
+    @Body()
+    body: {
+      mensagem: string;
+      historico?: { autor: 'user' | 'gpt'; texto: string }[];
+    },
+  ) {
+    const usuario = req.user;
+    return this.service.chat(body.mensagem, usuario.user, body.historico || []);
   }
 }

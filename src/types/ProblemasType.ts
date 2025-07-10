@@ -79,8 +79,33 @@ export type ProblemaLocalizacaoType = {
   decategoria: string;
   dedescricao: string;
   delocalizacao: string;
+  deusuario: string;
   dedata: string;
   destatus: string;
   localizacao: EnderecosType;
   categoria: CategoriasProblemasType;
+  FotosProblemas: Array<FotosProblemasType>;
+  HistoricoCorrecoesProblemas?: Array<HistoricoCorrecoesProblemasType>;
+  createdAt?: string;
+  HistoricoRelatos?: Array<HistoricoRelatosType>;
+};
+
+export type FotosProblemasType = {
+  fdcodigo?: string;
+  fdfoto: string;
+  fdproblema?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type HistoricoCorrecoesProblemasType = {
+  hcpcodigo: string;
+  hcpmotivo: string;
+  hcpproblema: string;
+  hcpquando: string;
+};
+
+export type HistoricoRelatosType = {
+  hrcodigo: string;
+  hrtratativa: string;
 };
