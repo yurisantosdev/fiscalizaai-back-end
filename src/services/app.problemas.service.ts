@@ -736,11 +736,7 @@ export class ProblemasServices {
           },
         });
 
-        await this.enderecoService.update({
-          ...data.localizacao,
-          edmunicipio: data.localizacao.edmunicipio,
-          edestado: data.localizacao.edestado
-        });
+        await this.enderecoService.update(data.localizacao);
 
         const problemaUpdate = await prisma.problemas.update({
           where: {

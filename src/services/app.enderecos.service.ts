@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
@@ -74,7 +75,10 @@ export class EnderecosService {
   async update(endereco: EnderecosType) {
     try {
       await this.prisma.$transaction(async (prisma) => {
-        const municipio = await prisma.municipios.findFirst({
+        let municipio;
+        let estado;
+
+        const consultaMunicipio = await prisma.municipios.findFirst({
           where: {
             mcmunicipio: endereco.edmunicipio,
           },
@@ -82,8 +86,7 @@ export class EnderecosService {
             mccodigo: true,
           }
         });
-
-        const estado = await prisma.estados.findFirst({
+        const consultaEstado = await prisma.estados.findFirst({
           where: {
             OR: [
               { esestado: endereco.edestado },
@@ -94,6 +97,18 @@ export class EnderecosService {
             escodigo: true,
           }
         });
+
+        if (consultaMunicipio == null) {
+          municipio = endereco.edmunicipio;
+        } else {
+          municipio = consultaMunicipio.mccodigo;
+        }
+
+        if (consultaEstado == null) {
+          estado = endereco.edestado;
+        } else {
+          estado = consultaEstado.escodigo;
+        }
 
         await this.prisma.enderecos.update({
           where: {
@@ -118,7 +133,6 @@ export class EnderecosService {
 
       return { status: true, message: 'Endereço atualizado com sucesso!' };
     } catch (error) {
-      console.log(error)
       const errorMessage =
         error instanceof HttpException
           ? error.getResponse()
