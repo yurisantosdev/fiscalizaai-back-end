@@ -25,12 +25,44 @@ export class KauaneService {
       if (relatos.problemas.length > 0) {
         const contexto = relatos.problemas
           .map((relato: any, index: number) => {
-            const { dedescricao, localizacao, categoria } = relato;
-            const { edbairro, edrua, ednumero, edcep, edcomplemento, edlatitude, edlongitude, edpontoreferencia, municipio, estado } = localizacao;
-            return `${index + 1}. Problema: ${dedescricao} | Local: ${edrua}, ${edbairro}, ${ednumero}, ${edcep}, ${edcomplemento}, ${edlatitude}, ${edlongitude}, ${edpontoreferencia}, ${municipio.mcmunicipio} - ${estado.esestado} | Categoria: ${categoria.cacategoria}, Data de registro: ${relato.dedata}, Status: ${relato.destatus}`;
+            const {
+              dedescricao,
+              localizacao,
+              categoria,
+              dedata,
+              destatus
+            } = relato;
+            const {
+              edbairro,
+              edrua,
+              ednumero,
+              edcep,
+              edcomplemento,
+              edlatitude,
+              edlongitude,
+              municipio,
+              estado
+            } = localizacao;
+
+            return `Relato ${index + 1}:
+              - Problema: ${dedescricao}
+              - Localização: ${edrua}, Nº ${ednumero}, Bairro ${edbairro}, CEP ${edcep}${edcomplemento ? `, Complemento: ${edcomplemento}` : ''}.
+                Coordenadas: [${edlatitude}, ${edlongitude}]
+                Cidade: ${municipio.mcmunicipio} - ${estado.esestado}
+              - Categoria: ${categoria.cacategoria} (${categoria.cadescricao})
+              - Data de registro: ${dedata}
+              - Status: ${destatus}\n`;
           })
           .join('\n');
-        promptFinal = `Com base nos relatos a seguir, responda à pergunta do usuário de forma clara e objetiva:\n\n${contexto}\n\nPergunta: ${mensagem}`;
+
+        promptFinal = `
+          Você é um assistente inteligente que responde com base em relatos públicos registrados por cidadãos.
+          Abaixo estão os relatos de problemas recebidos:
+          ${contexto}
+          Com base nas informações acima, responda à seguinte pergunta do usuário de forma clara, objetiva e contextualizada:
+          Pergunta: ${mensagem}
+          `.trim();
+
       } else {
         return {
           status: false,
