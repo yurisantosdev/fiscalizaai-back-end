@@ -16,6 +16,7 @@ import { FotosProblemasController } from './controllers/app.fotosProblemas.contr
 import { HistoricoCorrecoesProblemasController } from './controllers/app.historicoCorrecoesProblemas.controller';
 import { HistoricoRelatosController } from './controllers/app.historicoRelatos.controller';
 import { KauaneController } from './controllers/app.kauane.controller';
+import { FeedbacksUsuariosController } from './controllers/app.feedbacksUsuarios.controller';
 
 //Services
 import { PrismaService } from './prisma.service';
@@ -34,6 +35,7 @@ import { CodigosRecuperacaoSenhasServices } from './services/app.codigosRecupera
 import { HistoricoCorrecoesProblemasService } from './services/app.historicoCorrecoesProblemas.service';
 import { HistoricoRelatosService } from './services/app.historicoRelatos.service';
 import { KauaneService } from './services/app.kauane.service';
+import { FeedbacksUsuariosService } from './services/app.feedbacksUsuarios.service';
 
 @Module({
   imports: [
@@ -55,6 +57,7 @@ import { KauaneService } from './services/app.kauane.service';
     HistoricoCorrecoesProblemasController,
     HistoricoRelatosController,
     KauaneController,
+    FeedbacksUsuariosController,
   ],
   providers: [
     PrismaService,
@@ -73,6 +76,7 @@ import { KauaneService } from './services/app.kauane.service';
     HistoricoCorrecoesProblemasService,
     HistoricoRelatosService,
     KauaneService,
+    FeedbacksUsuariosService,
   ],
 })
 export class AppModule implements NestModule {

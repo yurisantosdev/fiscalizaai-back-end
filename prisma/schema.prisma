@@ -206,3 +206,14 @@ model HistoricoRelatos {
 
   @@map("historicoRelatos")
 }
+
+model FeedbacksUsuarios {
+  fucodigo   String   @id
+  fufeedback String
+  fuquando   String
+  fulido     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  @@map("feedbacksUsuarios")
+}
