@@ -102,7 +102,7 @@ export class KauaneService {
         input: inputFinal,
         prompt: {
           id: "pmpt_686fc6e0ff788193a0a575eec80b290d094b18991c9d9d23",
-          version: "7"
+          version: "8"
         }
       });
 
