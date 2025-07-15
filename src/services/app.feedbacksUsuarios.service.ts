@@ -22,6 +22,7 @@ export class FeedbacksUsuariosService {
             fucodigo: randomUUID(),
             fufeedback: feedback.fufeedback,
             fuquando: exibirDataHoraAtual(),
+            fuestrelas: feedback.fuestrelas,
           },
         });
 

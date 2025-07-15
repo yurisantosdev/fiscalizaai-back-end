@@ -3,6 +3,7 @@ export type FeedbacksUsuariosType = {
   fufeedback: string;
   fuquando: string;
   fulido: boolean;
+  fuestrelas: number;
   createdAt?: string;
   updatedAt?: string;
 };

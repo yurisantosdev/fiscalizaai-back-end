@@ -211,6 +211,7 @@ model FeedbacksUsuarios {
   fucodigo   String   @id
   fufeedback String
   fuquando   String
+  fuestrelas Int      @default(0)
   fulido     Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now())
