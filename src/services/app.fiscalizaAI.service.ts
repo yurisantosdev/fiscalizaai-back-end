@@ -6,7 +6,7 @@ import OpenAI from "openai";
 import { ProblemasServices } from './app.problemas.service';
 
 @Injectable()
-export class KauaneService {
+export class FiscalizaAIService {
   // eslint-disable-next-line prettier/prettier
   constructor(readonly prisma: PrismaService, private serviceProblemas: ProblemasServices) { }
 
@@ -72,7 +72,7 @@ export class KauaneService {
 
       let inputFinal = '';
       if (historico && historico.length > 0) {
-        inputFinal = historico.map(msg => `${msg.autor === 'user' ? 'Usuário' : 'Kauane'}: ${msg.texto}`).join('\n') + `\nUsuário: ${promptFinal}`;
+        inputFinal = historico.map(msg => `${msg.autor === 'user' ? 'Usuário' : 'FiscalizaAI'}: ${msg.texto}`).join('\n') + `\nUsuário: ${promptFinal}`;
       } else {
         inputFinal = promptFinal;
       }

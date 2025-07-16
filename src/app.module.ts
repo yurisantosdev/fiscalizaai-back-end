@@ -15,7 +15,7 @@ import { ProblemasController } from './controllers/app.problemas.controller';
 import { FotosProblemasController } from './controllers/app.fotosProblemas.controller';
 import { HistoricoCorrecoesProblemasController } from './controllers/app.historicoCorrecoesProblemas.controller';
 import { HistoricoRelatosController } from './controllers/app.historicoRelatos.controller';
-import { KauaneController } from './controllers/app.kauane.controller';
+import { FiscalizaAIController } from './controllers/app.fiscalizaAI.controller';
 import { FeedbacksUsuariosController } from './controllers/app.feedbacksUsuarios.controller';
 
 //Services
@@ -34,7 +34,7 @@ import { FotosProblemasService } from './services/app.fotosProblemas.service';
 import { CodigosRecuperacaoSenhasServices } from './services/app.codigosRecuperacaoSenhas.service';
 import { HistoricoCorrecoesProblemasService } from './services/app.historicoCorrecoesProblemas.service';
 import { HistoricoRelatosService } from './services/app.historicoRelatos.service';
-import { KauaneService } from './services/app.kauane.service';
+import { FiscalizaAIService } from './services/app.fiscalizaAI.service';
 import { FeedbacksUsuariosService } from './services/app.feedbacksUsuarios.service';
 
 @Module({
@@ -56,7 +56,7 @@ import { FeedbacksUsuariosService } from './services/app.feedbacksUsuarios.servi
     NotificacoesController,
     HistoricoCorrecoesProblemasController,
     HistoricoRelatosController,
-    KauaneController,
+    FiscalizaAIController,
     FeedbacksUsuariosController,
   ],
   providers: [
@@ -75,7 +75,7 @@ import { FeedbacksUsuariosService } from './services/app.feedbacksUsuarios.servi
     CodigosRecuperacaoSenhasServices,
     HistoricoCorrecoesProblemasService,
     HistoricoRelatosService,
-    KauaneService,
+    FiscalizaAIService,
     FeedbacksUsuariosService,
   ],
 })

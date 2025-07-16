@@ -10,15 +10,15 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { KauaneService } from 'src/services/app.kauane.service';
+import { FiscalizaAIService } from 'src/services/app.fiscalizaAI.service';
 
 @Controller()
-export class KauaneController {
+export class FiscalizaAIController {
   // eslint-disable-next-line prettier/prettier
-  constructor(private service: KauaneService) { }
+  constructor(private service: FiscalizaAIService) { }
 
   @UseGuards(AuthGuard('jwt'))
-  @Post('kauane/chat')
+  @Post('fiscalizaAI/chat')
   async chat(
     @Request() req,
     @Body()
