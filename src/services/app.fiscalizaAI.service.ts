@@ -20,7 +20,7 @@ export class FiscalizaAIService {
         where: { usemail: usuario },
         select: { uscodigo: true, usnome: true },
       });
-      const relatos = await this.serviceProblemas.findLocalizacaoUsuario({ uscodigo: usuarioAcao.uscodigo });
+      const relatos = await this.serviceProblemas.findLocalizacaoUsuario({ uscodigo: usuarioAcao.uscodigo }, false);
 
       if (relatos.problemas.length > 0) {
         const contexto = relatos.problemas

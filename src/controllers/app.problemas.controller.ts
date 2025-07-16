@@ -39,7 +39,7 @@ export class ProblemasController {
   async findLocalizacaoUsuario(
     @Request() @Body() Body: ConsultaProblemasLocalizacaoUsuarioType,
   ) {
-    return this.service.findLocalizacaoUsuario(Body);
+    return this.service.findLocalizacaoUsuario(Body, true);
   }
 
   @UseGuards(AuthGuard('jwt'))

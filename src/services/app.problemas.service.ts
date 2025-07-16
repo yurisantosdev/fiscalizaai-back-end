@@ -108,9 +108,14 @@ export class ProblemasServices {
     }
   }
 
-  async findLocalizacaoUsuario(body: ConsultaProblemasLocalizacaoUsuarioType) {
+  async findLocalizacaoUsuario(body: ConsultaProblemasLocalizacaoUsuarioType, consultarResolvidos: boolean) {
     try {
       let problemas;
+      let statusConsulta: any = ['EM_ANALISE', 'CORRIGIR'];
+
+      if (!consultarResolvidos) {
+        statusConsulta = ['EM_ANALISE', 'CORRIGIR', 'RESOLVIDO'];
+      }
 
       await this.prisma.$transaction(async (prisma) => {
         const usuario = await prisma.usuarios.findFirst({
@@ -143,7 +148,7 @@ export class ProblemasServices {
               },
               {
                 destatus: {
-                  notIn: ['EM_ANALISE', 'CORRIGIR']
+                  notIn: statusConsulta
                 }
               }
             ]
