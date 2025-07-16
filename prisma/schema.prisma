@@ -77,6 +77,7 @@ model Usuarios {
   Notificacoes             Notificacoes[]
   CodigosRecuperacaoSenhas CodigosRecuperacaoSenhas[]
   HistoricoRelatos         HistoricoRelatos[]
+  features                 Features[]
 
   @@map("usuarios")
 }
@@ -217,4 +218,34 @@ model FeedbacksUsuarios {
   updatedAt  DateTime @default(now())
 
   @@map("feedbacksUsuarios")
+}
+
+model Features {
+  ftcodigo    String   @id
+  fttitulo    String
+  ftdescricao String
+  ftquando    String
+  ftusuario   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  //Relações
+  usuario       Usuarios        @relation(fields: [ftusuario], references: [uscodigo])
+  fotosFeatures FotosFeatures[]
+
+  @@map("features")
+}
+
+model FotosFeatures {
+  ffcodigo    String   @id
+  fffoto      String
+  fffeature   String
+  ffdescricao String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  //Relações
+  feature Features @relation(fields: [fffeature], references: [ftcodigo])
+
+  @@map("fotosFeatures")
 }

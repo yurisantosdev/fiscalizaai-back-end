@@ -31,7 +31,6 @@ export async function buscarLatitudeLongitude(user) {
       };
     }
   } catch (error) {
-    console.error('Erro ao buscar coordenadas:', error);
     return {
       latitude: -27.1048361,
       longitude: -52.6142228,
