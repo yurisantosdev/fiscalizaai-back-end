@@ -38,7 +38,7 @@ export class FeedbacksUsuariosService {
         usuariosMasters.map((usuario) => {
           const objNotificacaoNovoRelatoAnalisar: NotificacoesType = {
             ntusuario: usuario.uscodigo,
-            ntnotificacao: 'Nova feedback registrado!',
+            ntnotificacao: 'Novo feedback registrado!',
             ntlink: 'https://fiscalizaai-front-end.vercel.app/feedbacks'
           };
 

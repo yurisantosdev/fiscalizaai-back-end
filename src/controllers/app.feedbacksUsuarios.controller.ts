@@ -4,7 +4,6 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Post,
   Request,
   UseGuards,
@@ -21,7 +20,6 @@ export class FeedbacksUsuariosController {
   // eslint-disable-next-line prettier/prettier
   constructor(private service: FeedbacksUsuariosService) { }
 
-  @UseGuards(AuthGuard('jwt'))
   @Post('feedback/create')
   async create(@Request() @Body() Body: FeedbacksUsuariosType) {
     return this.service.create(Body);
