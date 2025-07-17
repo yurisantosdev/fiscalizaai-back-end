@@ -8,6 +8,7 @@ import {
   Post,
   Request,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FeaturesService } from 'src/services/app.features.service';
@@ -34,5 +35,11 @@ export class FeaturesController {
   @Get('features/findAll')
   async findAll() {
     return this.service.findAll();
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('features/delete/:ftcodigo')
+  async delete(@Param('ftcodigo') ftcodigo: string) {
+    return this.service.delete(ftcodigo);
   }
 }

@@ -126,4 +126,32 @@ export class FeaturesService {
       throw new HttpException({ status: false, error: errorMessage }, HttpStatus.FORBIDDEN);
     }
   }
+
+  async delete(ftcodigo: string) {
+    try {
+      await this.prisma.$transaction(async (prisma) => {
+        await prisma.fotosFeatures.deleteMany({
+          where: {
+            fffeature: ftcodigo,
+          },
+        });
+
+        await prisma.features.delete({
+          where: {
+            ftcodigo,
+          },
+        });
+      });
+
+      return { status: true, message: 'Feature deletada com sucesso!' };
+
+    } catch (error) {
+      const errorMessage =
+        error instanceof HttpException
+          ? error.getResponse()
+          : 'Não foi possível deletar a feature, por favor tente novamente!';
+
+      throw new HttpException({ status: false, error: errorMessage }, HttpStatus.FORBIDDEN);
+    }
+  }
 }
