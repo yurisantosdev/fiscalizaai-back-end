@@ -5,11 +5,13 @@ import { PrismaService } from '../prisma.service';
 import { randomUUID } from 'crypto';
 import { FeaturesCreateType } from 'src/types/FeaturesType';
 import { exibirDataHoraAtual } from 'src/utils/obterDataHoraAtual';
+import { NotificacoesType } from 'src/types/NotificacoesType';
+import { NotificacoesService } from './app.notificacoes.service';
 
 @Injectable()
 export class FeaturesService {
   // eslint-disable-next-line prettier/prettier
-  constructor(readonly prisma: PrismaService) { }
+  constructor(readonly prisma: PrismaService, private notificacoesService: NotificacoesService) { }
 
   async create(feature: FeaturesCreateType) {
     try {
@@ -31,6 +33,21 @@ export class FeaturesService {
             }
           }
         });
+
+        const usuarios = await prisma.usuarios.findMany({
+          select: {
+            uscodigo: true,
+          },
+        });
+
+        usuarios.map((usuario) => {
+          const objNotificacao: NotificacoesType = {
+            ntusuario: usuario.uscodigo,
+            ntnotificacao: 'Noda feature registrada!',
+          };
+
+          this.notificacoesService.create(objNotificacao);
+        })
 
         return { status: true, message: 'Feature cadastrado com sucesso!' };
       });
