@@ -17,7 +17,7 @@ export class FeaturesService {
     try {
       await this.prisma.$transaction(async (prisma) => {
 
-        await prisma.features.create({
+        const featureCadastrada = await prisma.features.create({
           data: {
             ftcodigo: randomUUID(),
             fttitulo: feature.fttitulo,
@@ -44,6 +44,7 @@ export class FeaturesService {
           const objNotificacao: NotificacoesType = {
             ntusuario: usuario.uscodigo,
             ntnotificacao: 'Noda feature registrada!',
+            ntlink: `https://fiscalizaai-front-end.vercel.app/feature/${featureCadastrada.ftcodigo}`
           };
 
           this.notificacoesService.create(objNotificacao);
