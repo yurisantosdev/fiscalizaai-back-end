@@ -43,7 +43,7 @@ export class FeaturesService {
         usuarios.map((usuario) => {
           const objNotificacao: NotificacoesType = {
             ntusuario: usuario.uscodigo,
-            ntnotificacao: 'Noda feature registrada!',
+            ntnotificacao: 'Nova feature registrada!',
             ntlink: `https://fiscalizaai-front-end.vercel.app/feature/${featureCadastrada.ftcodigo}`
           };
 
