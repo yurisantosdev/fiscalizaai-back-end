@@ -18,6 +18,7 @@ import { HistoricoRelatosController } from './controllers/app.historicoRelatos.c
 import { FiscalizaAIController } from './controllers/app.fiscalizaAI.controller';
 import { FeedbacksUsuariosController } from './controllers/app.feedbacksUsuarios.controller';
 import { FeaturesController } from './controllers/app.features.controller';
+import { DemandasController } from './controllers/app.demandas.controller';
 
 //Services
 import { PrismaService } from './prisma.service';
@@ -38,6 +39,7 @@ import { HistoricoRelatosService } from './services/app.historicoRelatos.service
 import { FiscalizaAIService } from './services/app.fiscalizaAI.service';
 import { FeedbacksUsuariosService } from './services/app.feedbacksUsuarios.service';
 import { FeaturesService } from './services/app.features.service';
+import { DemandasService } from './services/app.demandas.service';
 
 @Module({
   imports: [
@@ -61,6 +63,7 @@ import { FeaturesService } from './services/app.features.service';
     FiscalizaAIController,
     FeedbacksUsuariosController,
     FeaturesController,
+    DemandasController,
   ],
   providers: [
     PrismaService,
@@ -81,6 +84,7 @@ import { FeaturesService } from './services/app.features.service';
     FiscalizaAIService,
     FeedbacksUsuariosService,
     FeaturesService,
+    DemandasService,
   ],
 })
 export class AppModule implements NestModule {

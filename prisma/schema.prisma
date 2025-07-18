@@ -78,6 +78,7 @@ model Usuarios {
   CodigosRecuperacaoSenhas CodigosRecuperacaoSenhas[]
   HistoricoRelatos         HistoricoRelatos[]
   features                 Features[]
+  Demandas                 Demandas[]
 
   @@map("usuarios")
 }
@@ -120,6 +121,7 @@ model Problemas {
   FotosProblemas              FotosProblemas[]
   HistoricoCorrecoesProblemas HistoricoCorrecoesProblemas[]
   HistoricoRelatos            HistoricoRelatos[]
+  RelatosDemandas             RelatosDemandas[]
 
   @@map("problemas")
 }
@@ -248,4 +250,40 @@ model FotosFeatures {
   feature Features @relation(fields: [fffeature], references: [ftcodigo])
 
   @@map("fotosFeatures")
+}
+
+enum StatusDemandasEnum {
+  PENDENTE
+  EM_ANDAMENTO
+  CONCLUIDO
+}
+
+model Demandas {
+  dmcodigo      String             @id
+  dmtitle       String
+  dmregistrado  String
+  dmstatus      StatusDemandasEnum
+  dmresponsavel String?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @default(now())
+
+  //Relações
+  responsavel     Usuarios?         @relation(fields: [dmresponsavel], references: [uscodigo])
+  RelatosDemandas RelatosDemandas[]
+
+  @@map("demandas")
+}
+
+model RelatosDemandas {
+  rdcodigo  String   @id
+  rddemanda String
+  rdrelato  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  //Relações
+  demanda Demandas  @relation(fields: [rddemanda], references: [dmcodigo])
+  relato  Problemas @relation(fields: [rdrelato], references: [decodigo])
+
+  @@map("relatosDemandas")
 }
